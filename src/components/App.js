@@ -1,42 +1,57 @@
-import React, { Component, useState } from "react";
-import '../styles/App.css';
+import React, { Component } from 'react';
 
-class App extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            renderBall: false,
-            posi : 0,
-            ballPosition: { left: "0px" }
-        };
-        this.renderChoice = this.renderBallOrButton.bind(this)
-        this.buttonClickHandler = this.buttonClickHandler.bind(this)
+class GolfGame extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showBall: false,
+      position: 0
     };
+  }
 
-    buttonClickHandler() {
-   
-   }
-    renderBallOrButton() {
-		if (this.state.renderBall) {
-		    return <div className="ball" style={this.state.ballPosition}></div>
-		} else {
-		    return <button onClick={this.buttonClickHandler} >Start</button>
-		}
-    }
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
 
-    // bind ArrowRight keydown event
-    componentDidMount() {
-      
-    }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
 
-    render() {
-        return (
-            <div className="playground">
-                {this.renderBallOrButton()}
-            </div>
-        )
+  handleKeyDown = (event) => {
+    if (event.keyCode === 39 && this.state.showBall) {
+      this.setState((prevState) => ({
+        position: prevState.position + 5
+      }));
     }
+  };
+
+  buttonClickHandler = () => {
+    this.setState({ showBall: true });
+  };
+
+  render() {
+    return (
+      <div>
+        {!this.state.showBall ? (
+          <button className="start" onClick={this.buttonClickHandler}>
+            Start
+          </button>
+        ) : (
+          <div
+            className="ball"
+            style={{
+              position: 'relative',
+              left: this.state.position + 'px',
+              width: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              backgroundColor: 'green'
+            }}
+          ></div>
+        )}
+      </div>
+    );
+  }
 }
 
-
-export default App;
+export default GolfGame;
